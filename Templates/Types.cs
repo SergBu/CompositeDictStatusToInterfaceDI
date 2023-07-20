@@ -17,7 +17,9 @@ namespace DictStatusToInterfaceDI.Types
 		[JsonProperty("TTN_date")]
 		public DateTime? TTNDate { get; set; }
 		public DateTime DateCreated { get; set; }
-	}
+        public string Status { get; set; }
+        public DateTime StatusChangeDateTime { get; set; }
+    }
 }
 
 

@@ -31,13 +31,17 @@ namespace Templates.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
-            var terminalTimeslotVehicleWithStatuses = _calculateTerminalTimeslotVehicleStatus.Calculate(
+            var timeslotVehicle = new TimeslotVehicle() { TerminalTimeslotVehicleId = 1 }; //подтягиваем из бд по айдишнику
+
+            var terminalTimeslotVehicleWithStatusesDictionary = _calculateTerminalTimeslotVehicleStatus.Calculate(
                 new List<TimeslotVehicle>()
                 {
-                    new TimeslotVehicle() { TerminalTimeslotVehicleId = 1 }
-                });
+                    timeslotVehicle
+                })
+                .ToDictionary(x => x.TerminalTimeslotVehicleId);
 
-            var terminalTimeslotVehicleWithStatusesDictionary = terminalTimeslotVehicleWithStatuses.ToDictionary(x => x.TerminalTimeslotVehicleId);
+            timeslotVehicle.Status = terminalTimeslotVehicleWithStatusesDictionary[timeslotVehicle.TerminalTimeslotVehicleId].Status;
+            timeslotVehicle.StatusChangeDateTime = terminalTimeslotVehicleWithStatusesDictionary[timeslotVehicle.TerminalTimeslotVehicleId].StatusChangeDateTime;
 
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
